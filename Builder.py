@@ -84,9 +84,10 @@ class Director:
 
     def build_all_requests(self) -> None:
         self.builder.get_from_source()
-        self.builder.to_json()
 
     def build_filtered_requests(self) -> None:
         self.builder.get_from_source()
-        self.builder.to_json()
         self.builder.filter_requests()
+
+    def requests_to_pretty_json(self) -> None:
+        self.builder.to_json()

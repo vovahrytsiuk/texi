@@ -1,4 +1,6 @@
 import psycopg2
+import time
+import datetime
 
 
 class SingletonMeta(type):
@@ -21,3 +23,19 @@ class DB(metaclass=SingletonMeta):
             cursor.execute('select "requestsID", requests."clientID", requests."driverID", requests."operatorID", "fromAddress", "toAddress", "time", "paymentType", "clientFullName", "phoneNumber", "driverFullName", "isAvailable", "operatorFullName", "password" from "requests" join "clients" on ("requests"."clientID" = "clients"."clientID") join "drivers" on ("requests"."driverID" = "drivers"."driverID") join "operators" on ("operators"."operatorID" = "requests"."operatorID")')
             data = cursor.fetchall()
         return data
+
+    def insert_request(self, args):
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''insert into "requests" 
+                ("clientID", "operatorID", "driverID", "fromAddress", "toAddress", "time", "paymentType")
+                values ({},     {},         {},         '{}',           '{}',       '{}',     '{}')'''.format(
+                    args["client_id"],
+                    args["operator_id"],
+                    args["driver_id"],
+                    args["from_address"],
+                    args["to_address"],
+                    datetime.datetime.now().date(),
+                    args["payment_type"]
+                )
+            )

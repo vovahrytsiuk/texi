@@ -8,13 +8,13 @@ if __name__ == "__main__":
     api = Api(app)
 
     @app.route("/get_requests/", methods=['GET', 'POST', 'DELETE', 'PUT'])
-    def get_prod():
+    def get_requests():
         post = Post()
         get = Get()
         delete = Delete()
         post.set_next(get).set_next(delete)
         return post.handle(request.method)
 
-    app.run(debug=True)
+    app.run(debug=False)
     DB().conn.close()
 

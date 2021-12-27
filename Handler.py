@@ -20,9 +20,6 @@ class AbstractHandler(Handler):
 
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler
-        # Returning a handler from here will let us link handlers in a
-        # convenient way like this:
-        # monkey.set_next(squirrel).set_next(dog)
         return handler
 
     @abstractmethod
@@ -36,7 +33,7 @@ class AbstractHandler(Handler):
 class Post(AbstractHandler):
     def handle(self, request: Any) -> str:
         if request == "POST":
-            # self.facade.insert()
+            self.facade.post_request()
             return "OK"
         else:
             return super().handle(request)
