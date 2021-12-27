@@ -26,3 +26,8 @@ class Facade:
 
         args = self.parser.parse_args()
         DB().insert_request(args)
+
+    def delete_request(self):
+        self.parser.add_argument("request_id", type=int)
+        args = self.parser.parse_args()
+        DB().delete_request(args)

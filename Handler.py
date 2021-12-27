@@ -50,7 +50,7 @@ class Get(AbstractHandler):
 class Delete(AbstractHandler):
     def handle(self, request: Any) -> str:
         if request == "DELETE":
-            # self.facade.delete()
+            self.facade.delete_request()
             return "OK"
         else:
             return super().handle(request)

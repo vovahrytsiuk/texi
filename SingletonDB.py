@@ -17,10 +17,21 @@ class DB(metaclass=SingletonMeta):
     def __init__(self):
         self.conn = psycopg2.connect(dbname='taxi', user='systemUser', password='jw8s0F4', host='localhost')
 
+    def commit(self):
+        self.conn.commit()
+
     def get_data(self):
         data = []
         with self.conn.cursor() as cursor:
-            cursor.execute('select "requestsID", requests."clientID", requests."driverID", requests."operatorID", "fromAddress", "toAddress", "time", "paymentType", "clientFullName", "phoneNumber", "driverFullName", "isAvailable", "operatorFullName", "password" from "requests" join "clients" on ("requests"."clientID" = "clients"."clientID") join "drivers" on ("requests"."driverID" = "drivers"."driverID") join "operators" on ("operators"."operatorID" = "requests"."operatorID")')
+            cursor.execute(
+                '''select   "requestsID", requests."clientID", requests."driverID", 
+                            requests."operatorID", "fromAddress", "toAddress", "time", 
+                            "paymentType", "clientFullName", "phoneNumber", "driverFullName", 
+                            "isAvailable", "operatorFullName", "password" 
+                    from "requests" 
+                            join "clients" on ("requests"."clientID" = "clients"."clientID") 
+                            join "drivers" on ("requests"."driverID" = "drivers"."driverID") 
+                            join "operators" on ("operators"."operatorID" = "requests"."operatorID")''')
             data = cursor.fetchall()
         return data
 
@@ -39,3 +50,13 @@ class DB(metaclass=SingletonMeta):
                     args["payment_type"]
                 )
             )
+        self.commit()
+
+    def delete_request(self, args):
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''delete from "requests"
+                where "requestsID" = {}
+                '''.format(args["request_id"])
+            )
+        self.commit()
