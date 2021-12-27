@@ -54,3 +54,12 @@ class Delete(AbstractHandler):
             return "OK"
         else:
             return super().handle(request)
+
+
+class Put(AbstractHandler):
+    def handle(self, request: Any) -> str:
+        if request == "PUT":
+            self.facade.update_request()
+            return "OK"
+        else:
+            return super().handle(request)

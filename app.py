@@ -12,7 +12,8 @@ if __name__ == "__main__":
         post = Post()
         get = Get()
         delete = Delete()
-        post.set_next(get).set_next(delete)
+        put = Put()
+        post.set_next(get).set_next(delete).set_next(put)
         return post.handle(request.method)
 
     app.run(debug=False)

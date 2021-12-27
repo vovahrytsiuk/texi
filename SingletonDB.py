@@ -60,3 +60,26 @@ class DB(metaclass=SingletonMeta):
                 '''.format(args["request_id"])
             )
         self.commit()
+
+    def update_request(self, args):
+        key_mapper = {
+            "request_id": "requestsID",
+            "client_id": "clientID",
+            "operator_id": "operatorID",
+            "driver_id": "driverID",
+            "from_address": "fromAddress",
+            "to_address": "toAddress",
+            "payment_type": "paymentType",
+        }
+        query = '''update "requests" set'''
+        for key, value in args.items():
+            if value is not None and key != "request_id":
+                if type(value) == int:
+                    query += '"' + key_mapper[key] + '"' + '=' + str(value) + ","
+                elif type(value) == str:
+                    query += '"' + key_mapper[key] + '"' + '=' + "'" + str(value) + "',"
+        query = query[0: -1]
+        query += '''where "requestsID" = {}'''.format(args["request_id"])
+        with self.conn.cursor() as cursor:
+            cursor.execute(query)
+        self.commit()

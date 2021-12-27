@@ -31,3 +31,16 @@ class Facade:
         self.parser.add_argument("request_id", type=int)
         args = self.parser.parse_args()
         DB().delete_request(args)
+
+    def update_request(self):
+        self.parser.add_argument("request_id", type=int)
+        self.parser.add_argument("client_id", type=int)
+        self.parser.add_argument("operator_id", type=int)
+        self.parser.add_argument("driver_id", type=int)
+        self.parser.add_argument("from_address", type=str)
+        self.parser.add_argument("to_address", type=str)
+        self.parser.add_argument("payment_type", type=str)
+
+        args = self.parser.parse_args()
+        DB().update_request(args)
+
