@@ -13,7 +13,6 @@ class Facade:
         builder = OwnRequestsBuilder()
         self.director.builder = builder
         self.director.build_all_requests()
-        self.director.requests_to_pretty_json()
         return builder.requests.requests
 
     def post_request(self):

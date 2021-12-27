@@ -2,6 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any
 from SingletonDB import DB
+from Specification import *
 
 
 class Builder(ABC):
@@ -40,15 +41,15 @@ class OwnRequestsBuilder(Builder):
         self._requests.set_requests(DB().get_data())
 
     def filter_requests(self) -> None:
-        pass
+        self._requests.filter_requests()
 
     def to_json(self) -> None:
         formatted_requests = []
         for row in self.requests.requests:
             req = {"requests_id": row[0], "client_id": row[1], "driver_id": row[2], "operator_id": row[3],
-                 "from_address": row[4], "to_address": row[5], "time": str(row[6]),
-                 "payment_type": row[7], "client_name": row[8], "phone_number": row[9], "driver_name": row[10],
-                 "is_available": str(row[11]), "operator_name": row[12], "password": row[13]}
+                   "from_address": row[4], "to_address": row[5], "time": str(row[6]),
+                   "payment_type": row[7], "client_name": row[8], "phone_number": row[9], "driver_name": row[10],
+                   "is_available": str(row[11]), "operator_name": row[12], "password": row[13]}
             formatted_requests.append(req)
         self._requests.set_requests(formatted_requests)
 
@@ -69,6 +70,16 @@ class OwnRequests:
     def set_requests(self, new_requests):
         self.requests = new_requests
 
+    def filter_requests(self):
+        specification = RequestIDFilter() & ClientIDFilter() & DriverIDFilter() & \
+                        OperatorIDFilter() & PaymentTypeFilter() & \
+                        BeforeTimeFilter() & AfterDateFilter()
+        filtered_requests = []
+        for request in self.requests:
+            if specification.is_satisfied_by(request):
+                filtered_requests.append(request)
+        self.requests = filtered_requests
+
 
 class Director:
     def __init__(self) -> None:
@@ -84,10 +95,5 @@ class Director:
 
     def build_all_requests(self) -> None:
         self.builder.get_from_source()
-
-    def build_filtered_requests(self) -> None:
-        self.builder.get_from_source()
-        self.builder.filter_requests()
-
-    def requests_to_pretty_json(self) -> None:
         self.builder.to_json()
+        self.builder.filter_requests()
