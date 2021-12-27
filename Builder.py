@@ -18,10 +18,14 @@ class Builder(ABC):
     def filter_requests(self) -> None:
         pass
 
+    @abstractmethod
+    def to_json(self) -> None:
+        pass
+
 
 class OwnRequestsBuilder(Builder):
     def __init__(self) -> None:
-        self.reset()
+        self._requests = OwnRequests()
 
     def reset(self) -> None:
         self._requests = OwnRequests()
@@ -37,6 +41,16 @@ class OwnRequestsBuilder(Builder):
 
     def filter_requests(self) -> None:
         pass
+
+    def to_json(self) -> None:
+        formatted_requests = []
+        for row in self.requests.requests:
+            req = {"requests_id": row[0], "client_id": row[1], "driver_id": row[2], "operator_id": row[3],
+                 "from_address": row[4], "to_address": row[5], "time": str(row[6]),
+                 "payment_type": row[7], "client_name": row[8], "phone_number": row[9], "driver_name": row[10],
+                 "is_available": str(row[11]), "operator_name": row[12], "password": row[13]}
+            formatted_requests.append(req)
+        self._requests.set_requests(formatted_requests)
 
 
 class OwnRequests:
@@ -55,10 +69,6 @@ class OwnRequests:
     def set_requests(self, new_requests):
         self.requests = new_requests
 
-    def delete(self, id):
-        pass
-        # put here call to db to delete requests with id = id
-
 
 class Director:
     def __init__(self) -> None:
@@ -74,7 +84,9 @@ class Director:
 
     def build_all_requests(self) -> None:
         self.builder.get_from_source()
+        self.builder.to_json()
 
     def build_filtered_requests(self) -> None:
         self.builder.get_from_source()
+        self.builder.to_json()
         self.builder.filter_requests()

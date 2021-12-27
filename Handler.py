@@ -36,7 +36,7 @@ class AbstractHandler(Handler):
 class Post(AbstractHandler):
     def handle(self, request: Any) -> str:
         if request == "POST":
-            self.facade.insert()
+            # self.facade.insert()
             return "OK"
         else:
             return super().handle(request)
@@ -45,7 +45,7 @@ class Post(AbstractHandler):
 class Get(AbstractHandler):
     def handle(self, request: Any) -> str:
         if request == "GET":
-            return self.facade/get()
+            return {"requests": self.facade.get_requests()}
         else:
             return super().handle(request)
 
@@ -53,7 +53,7 @@ class Get(AbstractHandler):
 class Delete(AbstractHandler):
     def handle(self, request: Any) -> str:
         if request == "DELETE":
-            self.facade.delete()
+            # self.facade.delete()
             return "OK"
         else:
             return super().handle(request)
