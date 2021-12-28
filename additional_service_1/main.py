@@ -24,6 +24,7 @@ class DB(metaclass=SingletonMeta):
         self.conn.commit()
 
     def get_data(self):
+        time.sleep(20)
         data = []
         with self.conn.cursor() as cursor:
             cursor.execute(
