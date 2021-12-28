@@ -62,10 +62,7 @@ class ShortRequests(Resource):
         requests = DB().get_data()
         formatted_requests = []
         for row in requests:
-            req = {"requests_id": row[0], "client_id": row[1], "driver_id": row[2], "operator_id": row[3],
-                   "from_address": row[4], "to_address": row[5], "time": str(row[6]),
-                   "payment_type": row[7], "client_name": row[8], "phone_number": row[9], "driver_name": row[10],
-                   "is_available": str(row[11]), "operator_name": row[12], "password": row[13]}
+            req = {"requests_id": row[0], "client_id": row[1], "driver_id": row[2], "operator_id": row[3]}
             formatted_requests.append(req)
         formatted_requests
 
@@ -77,11 +74,15 @@ class RequestDetail(Resource):
         requests = DB().get_data_by_id(id)
         formatted_requests = []
         for row in requests:
-            req = {"requests_id": row[0], "client_id": row[1], "driver_id": row[2], "operator_id": row[3]}
+            req = {"requests_id": row[0], "client_id": row[1], "driver_id": row[2], "operator_id": row[3],
+                   "from_address": row[4], "to_address": row[5], "time": str(row[6]),
+                   "payment_type": row[7], "client_name": row[8], "phone_number": row[9], "driver_name": row[10],
+                   "is_available": str(row[11]), "operator_name": row[12], "password": row[13]}
             formatted_requests.append(req)
+
         requests = formatted_requests
 
-        return requests
+        return requests[0]
 
 
 if __name__ == "__main__":

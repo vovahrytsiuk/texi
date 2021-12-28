@@ -96,6 +96,7 @@ class Service2Builder(Builder):
         request_details = []
         for req in self._requests.requests:
             request_details.append(requests.get('http://127.0.0.1:5002/details/{}'.format(req["requests_id"])).json())
+        self._requests.set_requests(request_details)
 
     def filter_requests(self) -> None:
         self._requests.filter_requests()

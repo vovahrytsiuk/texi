@@ -5,7 +5,7 @@ from flask_restful import reqparse
 import datetime
 
 
-def to_date(date_string):
+def to_date(date_string: str):
     return datetime.datetime.strptime(date_string, "%Y-%m-%d").date()
 
 
