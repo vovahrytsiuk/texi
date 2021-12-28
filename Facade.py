@@ -1,7 +1,8 @@
 from __future__ import annotations
-from Builder import *
+from Builder import Director, OwnRequestsBuilder, Service1Builder, Service2Builder
 from flask_restful import Resource, Api, reqparse
 import time
+from SingletonDB import DB
 
 
 class Facade:

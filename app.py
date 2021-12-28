@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api, reqparse
-from Handler import *
+
 from SingletonDB import DB
+from CacheData import RequestsCache
 
 if __name__ == "__main__":
-    DB().generate_random_data()
+    RequestsCache().update_cache()
     # app = Flask(__name__)
     # api = Api(app)
     #

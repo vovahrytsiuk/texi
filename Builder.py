@@ -39,7 +39,7 @@ class OwnRequestsBuilder(Builder):
         return requests
 
     def get_from_source(self) -> None:
-        self._requests.set_requests(DB().get_data())
+        self._requests.set_requests(DB().select_requests())
 
     def filter_requests(self) -> None:
         self._requests.filter_requests()
