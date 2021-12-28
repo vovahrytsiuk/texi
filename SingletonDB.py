@@ -1,6 +1,8 @@
 import psycopg2
 import time
 import datetime
+import random
+import string
 
 
 class SingletonMeta(type):
@@ -51,6 +53,41 @@ class DB(metaclass=SingletonMeta):
                 )
             )
         self.commit()
+
+    def generate_random_data(self):
+        with self.conn.cursor() as cursor:
+            for _ in range(100000):
+                payment = ["cash", "py pass", "card"]
+                payment_type = payment[random.randint(0, 2)]
+                client = random.randint(1, 5)
+                driver = random.randint(1, 5)
+                operator = random.randint(1, 5)
+                length = random.randint(5, 50)
+                letters = string.ascii_lowercase
+                from_address = ''.join(random.choice(letters) for i in range(length))
+                length = random.randint(5, 50)
+                to_address = ''.join(random.choice(letters) for i in range(length))
+                start_date = datetime.date(1990, 1, 1)
+                end_date = datetime.date(2030, 2, 1)
+
+                time_between_dates = end_date - start_date
+                days_between_dates = time_between_dates.days
+                random_number_of_days = random.randrange(days_between_dates)
+                random_date = start_date + datetime.timedelta(days=random_number_of_days)
+                cursor.execute(
+                    '''insert into "requests" 
+                    ("clientID", "operatorID", "driverID", "fromAddress", "toAddress", "time", "paymentType")
+                    values ({},     {},         {},         '{}',           '{}',       '{}',     '{}')'''.format(
+                        client,
+                        operator,
+                        driver,
+                        from_address,
+                        to_address,
+                        random_date,
+                        payment_type
+                    )
+                )
+        self.conn.commit()
 
     def delete_request(self, args):
         with self.conn.cursor() as cursor:
