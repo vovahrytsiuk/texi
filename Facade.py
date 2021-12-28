@@ -13,7 +13,14 @@ class Facade:
         builder = OwnRequestsBuilder()
         self.director.builder = builder
         self.director.build_all_requests()
-        return builder.requests.requests
+        own = builder.requests
+
+        builder = Service1Builder()
+        self.director.builder = builder
+        self.director.build_all_requests()
+        add1 = builder.requests
+        own.merge(add1)
+        return own.requests
 
     def post_request(self):
         self.parser.add_argument("client_id", type=int)

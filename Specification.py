@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
-from flask_restful import  reqparse
+from flask_restful import reqparse
 import datetime
 
 

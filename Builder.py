@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 from SingletonDB import DB
 from Specification import *
+import requests
 
 
 class Builder(ABC):
@@ -54,6 +55,29 @@ class OwnRequestsBuilder(Builder):
         self._requests.set_requests(formatted_requests)
 
 
+class Service1Builder(Builder):
+    def __init__(self) -> None:
+        self._requests = OwnRequests()
+
+    def reset(self) -> None:
+        self._requests = OwnRequests()
+
+    @property
+    def requests(self) -> OwnRequests:
+        requests = self._requests
+        self.reset()
+        return requests
+
+    def get_from_source(self) -> None:
+        self._requests.set_requests(requests.get('http://127.0.0.1:5001/search/').json())
+
+    def filter_requests(self) -> None:
+        self._requests.filter_requests()
+
+    def to_json(self) -> None:
+        pass
+
+
 class OwnRequests:
     def __init__(self) -> None:
         self.requests = []
@@ -61,7 +85,7 @@ class OwnRequests:
     def add(self, part: Any) -> None:
         self.parts.append(part)
 
-    def merge(self, other_requests):
+    def merge(self, other_requests: OwnRequests):
         self.requests += other_requests.requests
 
     def delete_request(self, id):
