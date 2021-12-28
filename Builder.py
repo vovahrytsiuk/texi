@@ -78,6 +78,32 @@ class Service1Builder(Builder):
         pass
 
 
+class Service2Builder(Builder):
+    def __init__(self) -> None:
+        self._requests = OwnRequests()
+
+    def reset(self) -> None:
+        self._requests = OwnRequests()
+
+    @property
+    def requests(self) -> OwnRequests:
+        requests = self._requests
+        self.reset()
+        return requests
+
+    def get_from_source(self) -> None:
+        self._requests.set_requests(requests.get('http://127.0.0.1:5002/short_search/').json())
+        request_details = []
+        for req in self._requests.requests:
+            request_details.append(requests.get('http://127.0.0.1:5002/details/{}'.format(req["requests_id"])).json())
+
+    def filter_requests(self) -> None:
+        self._requests.filter_requests()
+
+    def to_json(self) -> None:
+        pass
+
+
 class OwnRequests:
     def __init__(self) -> None:
         self.requests = []

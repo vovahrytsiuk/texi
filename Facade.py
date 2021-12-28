@@ -19,7 +19,14 @@ class Facade:
         self.director.builder = builder
         self.director.build_all_requests()
         add1 = builder.requests
+
+        builder = Service2Builder()
+        self.director.builder = builder
+        self.director.build_all_requests()
+        add2 = builder.requests
+
         own.merge(add1)
+        own.merge(add2)
         return own.requests
 
     def post_request(self):
