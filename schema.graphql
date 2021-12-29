@@ -1,0 +1,70 @@
+schema {
+    query: Query
+}
+
+type Request {
+    request_id: ID!
+    client_id: Int!
+    driver_id: Int!
+    operator_id: Int!
+    from_address: String!
+    to_address: String!
+    time: String!
+    payment_type: String!
+}
+
+type Client {
+    client_id: ID!
+    client_name: String!
+    phone_number: Int!
+}
+
+type Driver {
+    driver_id: ID!
+    driver_name: String!
+    is_available: Boolean!
+}
+
+type Operator {
+    operator_id: ID!
+    operator_name: String!
+    password: String!
+}
+
+type Requests {
+    success: Boolean!
+    errors: [String]
+    requests: [Request]
+}
+
+type Clients {
+    success: Boolean!
+    errors: [String]
+    clients: [Client]
+}
+
+type Drivers {
+    success: Boolean!
+    errors: [String]
+    drivers: [Driver]
+}
+
+type Operators {
+    success: Boolean!
+    errors: [String]
+    operators: [Operator]
+}
+
+type RequestResult {
+    success: Boolean!
+    errors: [String]
+    request: Request
+}
+
+type Query {
+    listRequests(client_id: Int, driver_id: Int, operator_id: Int, payment_type: String, request_id: Int): Requests!
+    listClients: Clients!
+    listDrivers: Drivers!
+    listRate(product_id:Int!):RateResult!
+}
+

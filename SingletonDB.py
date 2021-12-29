@@ -15,7 +15,7 @@ class SingletonMeta(type):
 
 class DB(metaclass=SingletonMeta):
     def __init__(self):
-        self.conn = psycopg2.connect(dbname='taxi', user='systemUser', password='jw8s0F4', host='localhost')
+        self.conn = psycopg2.connect(dbname='taxi3', user='systemUser1', password='jw8s0F4', host='localhost')
 
     def commit(self):
         self.conn.commit()
