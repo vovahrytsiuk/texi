@@ -39,11 +39,13 @@ class DB(metaclass=SingletonMeta):
         return data
 
     def insert_request(self, args):
+        id = 0
         with self.conn.cursor() as cursor:
             cursor.execute(
                 '''insert into "requests" 
                 ("clientID", "operatorID", "driverID", "fromAddress", "toAddress", "time", "paymentType")
-                values ({},     {},         {},         '{}',           '{}',       '{}',     '{}')'''.format(
+                values ({},     {},         {},         '{}',           '{}',       '{}',     '{}') 
+                returning "requestsID"'''.format(
                     args["client_id"],
                     args["operator_id"],
                     args["driver_id"],
@@ -53,7 +55,14 @@ class DB(metaclass=SingletonMeta):
                     args["payment_type"]
                 )
             )
+            id = cursor.fetchone()[0]
         self.commit()
+
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''insert into "cache"'''
+            )
+        return id
 
     def delete_request(self, args):
         with self.conn.cursor() as cursor:
@@ -87,21 +96,12 @@ class DB(metaclass=SingletonMeta):
             cursor.execute(query)
         self.commit()
 
-    def select_requests(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("client_id", type=int),
-        parser.add_argument("request_id", type=int),
-        parser.add_argument("driver_id", type=int),
-        parser.add_argument("operator_id", type=int),
-        parser.add_argument("payment_type", type=str),
-        parser.add_argument("from_address", type=str),
-        parser.add_argument("to_address", type=str),
-        args = parser.parse_args()
+    def select_requests(self, args):
         query = '''
         select "requestID", "clientID", "driverID", 
-        "operatorID", "fromAddress", "toAddress", "time", 
-        "paymentType", "clientFullName", "phoneNumber", "driverFullName", 
-        "isAvailable", "operatorFullName", "password"
+        "operatorID", "fromAddress", "toAddress", 
+        "paymentType", "clientFullName", "driverFullName", 
+        "operatorFullName"
         from "cache"
         '''
         options = []
@@ -141,9 +141,10 @@ class DB(metaclass=SingletonMeta):
                 query += " and "
         requests_data = []
         print(query)
-        with DB().conn.cursor() as cursor:
+        with self.conn.cursor() as cursor:
             cursor.execute(query)
             requests_data = cursor.fetchall()
+
         return requests_data
 
     def generate_random_data(self):

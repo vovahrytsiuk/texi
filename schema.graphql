@@ -1,0 +1,73 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Request {
+    request_id: ID!
+    client_id: Int!
+    driver_id: Int!
+    operator_id: Int!
+    from_address: String!
+    to_address: String!
+    payment_type: String!
+    client_name: String!
+    driver_name: String!
+    operator_name: String!
+}
+
+type RequestsResult{
+    success: Boolean!
+    errors: [String]
+    requests: [Request]
+}
+
+type Client {
+    client_id: ID!
+    client_name: String!
+    phone_number: Int!
+}
+
+type ClientsResult {
+    success: Boolean!
+    errors: [String]
+    clients: [Client]
+}
+
+type Driver {
+    driver_id: ID!
+    driver_name: String!
+    is_available: Boolean!
+}
+
+type DriversResult {
+    success: Boolean!
+    errors: [String]
+    drivers: [Driver]
+}
+
+type Operator {
+    operator_id: ID!
+    operator_name: String!
+    password: String!
+}
+
+type OperatorsResult {
+    success: Boolean!
+    errors: [String]
+    operators: [Operator]
+}
+
+type Query {
+    listRequests(client_id: Int, request_id: Int, driver_id: Int, operator_id: Int, payment_type: String, from_address: String, to_address: String): RequestsResult!
+    listClients(client_id: Int): ClientsResult!
+    listDrivers(driver_id: Int): DriversResult!
+    listOperators(operator_id: Int): OperatorsResult!
+}
+
+type Mutation {
+    createDriver(driver_name: String!, is_available: Boolean!): DriversResult
+    createClient(client_name: String!, phone_number: Int): ClientsResult
+    createOperator(operator_name: String!, password: String!): OperatorsResult
+    createRequest(client_is: Int, driver_id: Int, operator_id: Int, from_address: String, to_address: String, payment_type: String): RequestsResult
+}
