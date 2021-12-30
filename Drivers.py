@@ -47,3 +47,32 @@ class Drivers:
         self.conn.commit()
 
         return self.to_json(self.select_data({"driver_id": id}))
+
+    def update_data(self, args) -> int:
+        key_mapper = {
+            "driver_id": "driverID",
+            "driver_name": "driverFullName",
+            "is_available": "isAvailable"
+        }
+        query = '''update "drivers" set'''
+        for key, value in args.items():
+            if value is not None and key != "driver_id":
+                if type(value) == int:
+                    query += '"' + key_mapper[key] + '"' + '=' + str(value) + ","
+                elif type(value) == str:
+                    query += '"' + key_mapper[key] + '"' + '=' + "'" + str(value) + "',"
+        query = query[0: -1]
+        query += '''where "driverID" = {}'''.format(args["driver_id"])
+        with self.conn.cursor() as cursor:
+            cursor.execute(query)
+        self.conn.commit()
+        return args["driver_id"]
+
+    def delete_data(self, args):
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''delete from "drivers"
+                where "driverID" = {}
+                '''.format(args["driver_id"])
+            )
+        self.conn.commit()

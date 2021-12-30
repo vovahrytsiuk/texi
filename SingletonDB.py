@@ -40,6 +40,7 @@ class DB(metaclass=SingletonMeta):
 
     def insert_request(self, args):
         id = 0
+        print(args)
         with self.conn.cursor() as cursor:
             cursor.execute(
                 '''insert into "requests" 
@@ -58,10 +59,65 @@ class DB(metaclass=SingletonMeta):
             id = cursor.fetchone()[0]
         self.commit()
 
+        client_data = self.select_client_info(args["client_id"])
+        driver_data = self.select_driver_info(args["driver_id"])
+        operator_data = self.select_operator_info(args["operator_id"])
+        print(client_data)
+        print(driver_data)
+        print(operator_data)
+
         with self.conn.cursor() as cursor:
             cursor.execute(
-                '''insert into "cache"'''
+                '''insert into "cache" (
+                    "requestID",
+                    "clientID",
+                    "driverID",
+                    "operatorID",
+                    "fromAddress",
+                    "toAddress",
+                    "time",
+                    "paymentType",
+                    "clientFullName",
+                    "phoneNumber",
+                    "driverFullName",
+                    "isAvailable",
+                    "operatorFullName",
+                    "password"
+                )
+                values (
+                {},
+                {},
+                {},
+                {},
+                '{}',
+                '{}',
+                '{}',
+                '{}',
+                '{}',
+                {},
+                '{}',
+                {},
+                '{}',
+                '{}'
+                )'''.format(
+                    id,
+                    args["client_id"],
+                    args["driver_id"],
+                    args["operator_id"],
+                    str(args["from_address"]),
+                    str(args["to_address"]),
+                    datetime.datetime.now().date(),
+                    str(args["payment_type"]),
+                    str(client_data[0]),
+                    client_data[1],
+                    str(driver_data[0]),
+                    driver_data[1],
+                    str(operator_data[0]),
+                    str(operator_data[1])
+                )
             )
+        self.commit()
+        print(id)
         return id
 
     def delete_request(self, args):
@@ -72,6 +128,36 @@ class DB(metaclass=SingletonMeta):
                 '''.format(args["request_id"])
             )
         self.commit()
+
+    def select_client_info(self, client_id):
+        data = []
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''select "clientFullName", "phoneNumber"
+                from "clients" where "clientID" = {}'''.format(client_id)
+            )
+            data = cursor.fetchall()
+        return data[0]
+
+    def select_driver_info(self, driver_id):
+        data = []
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''select "driverFullName", "isAvailable"
+                from "drivers" where "driverID" = {}'''.format(driver_id)
+            )
+            data = cursor.fetchall()
+        return data[0]
+
+    def select_operator_info(self, operator_id):
+        data = []
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                '''select "operatorFullName", "password"
+                from "operators" where "operatorID" = {}'''.format(operator_id)
+            )
+            data = cursor.fetchall()
+        return data[0]
 
     def update_request(self, args):
         key_mapper = {

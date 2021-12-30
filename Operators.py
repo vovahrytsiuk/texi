@@ -48,3 +48,23 @@ class Operators:
         self.conn.commit()
 
         return self.to_json(self.select_data({"operator_id": id}))
+
+    def update_data(self, args) -> int:
+        key_mapper = {
+            "operator_id": "operatorID",
+            "operator_name": "operatorFullName",
+            "password": "password"
+        }
+        query = '''update "operators" set'''
+        for key, value in args.items():
+            if value is not None and key != "operator_id":
+                if type(value) == int:
+                    query += '"' + key_mapper[key] + '"' + '=' + str(value) + ","
+                elif type(value) == str:
+                    query += '"' + key_mapper[key] + '"' + '=' + "'" + str(value) + "',"
+        query = query[0: -1]
+        query += '''where "operatorID" = {}'''.format(args["operator_id"])
+        with self.conn.cursor() as cursor:
+            cursor.execute(query)
+        self.conn.commit()
+        return args["operator_id"]

@@ -28,6 +28,12 @@ if __name__ == "__main__":
     mutation.set_field("createDriver", facade.create_driver_resolver)
     mutation.set_field("createClient", facade.create_client_resolver)
     mutation.set_field("createOperator", facade.create_operator_resolver)
+    mutation.set_field("createRequest", facade.create_request_resolver)
+    mutation.set_field("updateClient", facade.update_client_resolver)
+    mutation.set_field("updateDriver", facade.update_driver_resolver)
+    mutation.set_field("updateOperator", facade.update_operator_resolver)
+    mutation.set_field("deleteClient", facade.delete_client_resolver)
+    mutation.set_field("deleteDriver", facade.delete_driver_resolver)
 
     type_defs = load_schema_from_path("schema.graphql")
     schema = make_executable_schema(

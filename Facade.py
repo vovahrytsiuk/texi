@@ -107,6 +107,52 @@ class Facade:
             "payment_type": to_address
         }
         id = DB().insert_request(args)
+        return self.requests_resolver(obj, info, request_id=id)
+
+    def update_client_resolver(self, obj, info, client_id, client_name=None, phone_number=None):
+        args = {
+            "client_id": client_id,
+            "client_name": client_name,
+            "phone_number": phone_number
+        }
+        id = self.client.update_data(args)
+        print(id)
+        return self.clients_resolver(obj, info, id)
+
+    def update_driver_resolver(self, obj, info, driver_id, driver_name=None, is_available=None):
+        args = {
+            "driver_id": driver_id,
+            "driver_name": driver_name,
+            "is_available": is_available
+        }
+        id = self.driver.update_data(args)
+        print(id)
+        return self.driver_resolver(obj, info, id)
+
+    def update_operator_resolver(self, obj, info, operator_id, operator_name=None, password=None):
+        args = {
+            "operator_id": operator_id,
+            "operator_name": operator_name,
+            "password": password
+        }
+        id = self.operator.update_data(args)
+        print(id)
+        return self.operator_resolver(obj, info, id)
+
+    def delete_client_resolver(self, obj, info, client_id):
+        args = {
+            "client_id": client_id
+        }
+        self.client.delete_data(args)
+        return self.clients_resolver(obj, info)
+
+    def delete_driver_resolver(self, obj, info, driver_id):
+        args = {
+            "driver_id": driver_id
+        }
+        self.driver.delete_data(args)
+        return self.driver_resolver(obj, info)
+
 
     def post_request(self):
         self.parser.add_argument("client_id", type=int)
