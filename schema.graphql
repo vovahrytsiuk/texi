@@ -31,25 +31,25 @@ type Operator {
     password: String!
 }
 
-type Requests {
+type RequestsResult {
     success: Boolean!
     errors: [String]
     requests: [Request]
 }
 
-type Clients {
+type ClientsResult {
     success: Boolean!
     errors: [String]
     clients: [Client]
 }
 
-type Drivers {
+type DriversResult {
     success: Boolean!
     errors: [String]
     drivers: [Driver]
 }
 
-type Operators {
+type OperatorsResult {
     success: Boolean!
     errors: [String]
     operators: [Operator]
@@ -62,9 +62,7 @@ type RequestResult {
 }
 
 type Query {
-    listRequests(client_id: Int, driver_id: Int, operator_id: Int, payment_type: String, request_id: Int): Requests!
-    listClients: Clients!
-    listDrivers: Drivers!
-    listRate(product_id:Int!):RateResult!
+    listRequests: RequestsResult!
+    getRequest(id: ID!): RequestResult!
 }
 

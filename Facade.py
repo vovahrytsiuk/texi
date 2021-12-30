@@ -9,6 +9,20 @@ class Facade:
         self.parser = reqparse.RequestParser()
         self.director = Director()
 
+    def requests_resolver(self, obj, info):
+        try:
+            requests = self.get_requests()
+            response = {
+                "success": True,
+                "requests": requests
+            }
+        except Exception as error:
+            response = {
+                "success": False,
+                "errors": [str(error)]
+            }
+        return response
+
     def get_requests(self):
         builder = OwnRequestsBuilder()
         self.director.builder = builder
