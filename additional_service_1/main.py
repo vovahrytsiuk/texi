@@ -4,6 +4,7 @@ from Specification import *
 import psycopg2
 import time
 import datetime
+import random
 
 
 class SingletonMeta(type):
@@ -24,6 +25,7 @@ class DB(metaclass=SingletonMeta):
         self.conn.commit()
 
     def get_data(self):
+        time.sleep(random.randint(20, 30))
         data = []
         with self.conn.cursor() as cursor:
             cursor.execute(

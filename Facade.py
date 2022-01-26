@@ -1,7 +1,9 @@
 from __future__ import annotations
-from Builder import *
+from Builder import Director, OwnRequestsBuilder, Service1Builder, Service2Builder, FromCacheBuilder
 from flask_restful import Resource, Api, reqparse
 import time
+from SingletonDB import DB
+from CacheData import  CacheTable
 
 
 class Facade:
@@ -10,23 +12,10 @@ class Facade:
         self.director = Director()
 
     def get_requests(self):
-        builder = OwnRequestsBuilder()
+        builder = FromCacheBuilder()
         self.director.builder = builder
         self.director.build_all_requests()
         own = builder.requests
-
-        builder = Service1Builder()
-        self.director.builder = builder
-        self.director.build_all_requests()
-        add1 = builder.requests
-
-        builder = Service2Builder()
-        self.director.builder = builder
-        self.director.build_all_requests()
-        add2 = builder.requests
-
-        own.merge(add1)
-        own.merge(add2)
         return own.requests
 
     def post_request(self):
